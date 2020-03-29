@@ -37128,6 +37128,7 @@ const { merge } = require('most')
 // based on http://jsfiddle.net/mattpodwysocki/pfCqq/
 function mouseDrags (mouseDowns$, mouseUps, mouseMoves, settings) {
   const {pixelRatio} = settings
+  var rollMultiplier = 3.0;
   return mouseDowns$.flatMap(function (md) {
     // calculate offsets when mouse down
     let startX = md.pageX * pixelRatio
@@ -37141,11 +37142,12 @@ function mouseDrags (mouseDowns$, mouseUps, mouseMoves, settings) {
         let curX = e.pageX * pixelRatio
         let curY = e.pageY * pixelRatio
 
+		//Travis's Changes: added rollMultiplier for faster roll & pan
         let delta = {
           left: curX - startX,
           top: curY - startY,
-          x: prevX - curX,
-          y: curY - prevY
+          x: (prevX - curX) * rollMultiplier,
+          y: (curY - prevY) * rollMultiplier
         }
 
         prevX = curX
@@ -47452,10 +47454,10 @@ function init() {
 
   // Show all exceptions to the user: // WARNING !! this is not practical at dev time
   AlertUserOfUncaughtExceptions();
-
+  
   var viewer = document.getElementById('viewerContext');
   var design = viewer.getAttribute('design-url');
-
+  
   gProcessor = new Processor(viewer);
 
   // load the given design
@@ -48105,7 +48107,7 @@ Viewer.defaults = function () {
       clip: { min: 0.5, max: 1000 // rendering outside this range is clipped
       } },
     plate: {
-      draw: true, // draw or not
+      draw: false, // draw or not
       size: 200, // plate size (X and Y)
       // minor grid settings
       m: {
@@ -48139,11 +48141,12 @@ Viewer.defaults = function () {
       faces: true,
       overlay: false, // use overlay when drawing lines or not
       smooth: false, // use smoothing or not
-      faceColor: { r: 1.0, g: 0.4, b: 1.0, a: 1.0 }, // default face color
+      faceColor: { r: 0, g: 0.21, b: 0.78, a: 1}, // default face color (blue)
       outlineColor: { r: 0.0, g: 0.0, b: 0.0, a: 0.1 // default outline color
       } },
     background: {
-      color: { r: 0.93, g: 0.93, b: 0.93, a: 1.0 }
+      color: { r: 1, g: 1, b: 1, a: 1.0 } //white
+	  //(original) color: { r: 0.93, g: 0.93, b: 0.93, a: 1.0 }
     }
   };
 };
