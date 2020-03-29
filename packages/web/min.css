@@ -9,7 +9,8 @@
   font-weight: bold;
   font-family: Helvetica, Arial, Sans;
   border: thin solid black;
-  min-width: 410px;
+  width: 415px;
+  /* min-width: 410px; */
 }
 
 #header {
@@ -38,6 +39,15 @@ canvas {
   height: 100%;
 
   cursor: move; 
+}
+
+#statusdiv {
+}
+#statusspan {
+   margin-right: 2em;
+}
+#statusbuttons {
+   float: right;
 }
 
 #parametersdiv {
@@ -98,8 +108,9 @@ canvas {
 }
 
 #tail { 
-  margin: 5px; /* not inherited */
+  margin: 5px;  /* not inherited */
 }
+
 
 #busy {
   vertical-align: middle;
