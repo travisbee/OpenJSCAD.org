@@ -1,9 +1,6 @@
 // title      : Cube with Parameter
 // author     : Travis Bee
-// license    : MIT License
-// revision   : 0
-// tags       : Cube
-// file       : Cube-Param.jscad
+// file       : Test-Cube.jscad
 
 function getParameterDefinitions() {
   return [
