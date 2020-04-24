@@ -9,6 +9,7 @@ function getParameterDefinitions () {
     { name: 'width', caption: 'Width (22 - 100):', type: 'float', initial: 75, step: 1 },
     { name: 'height', caption: 'Height (15 - 240):', type: 'float', initial: 50, step: 1 },
     { name: 'lidThickness', caption: 'Lid Thickness (3 - 10):', type: 'float', initial: 5, step: 1 },
+    { name: 'cornerType', caption: 'Corner Type:', type: 'choice', values: [0, 1, 2], captions: ['Sharp', 'Radius', 'Chamfer'], initial: 1 },
     { name: 'closed', caption: 'Configuration:', type: 'choice', values: [0, 1], captions: ['Open (for printing)', 'Closed'], initial: 0 },
   ];
 }
@@ -20,6 +21,9 @@ function main (params) {
   var height = params.height;
   var lidThickness = params.lidThickness;
   var closed = params.closed;
+  var cornerType = params.cornerType;
+  var cornerRes = 0; //Corner resolution (4 = chamfer, 16 = radius)
+  var r = 0; //Corner radius/chamfer length
   
   if (length < 22) {length = 22}
   if (length > 210) {length = 210}
@@ -29,21 +33,29 @@ function main (params) {
   if (height > 240) {height = 240}
   if (lidThickness < 3) {lidThickness = 3}
   if (lidThickness > 10) {lidThickness = 10}
+  if (cornerType == 1) { //Radius corners
+    cornerRes = 16;
+    r = 5;
+  } else if (cornerType == 2) { //Chamfer corners
+    cornerRes = 4;
+    r = 3;
+  }
     
   //Feature1 - Boss-Extrude1
   var x1 = length / 2;
   var y1 = width / 2;
   var z1 = height - lidThickness;
-  let path1_1 = new CSG.Path2D([[-x1,y1],[x1,y1]],false);
+  let path1_1 = new CSG.Path2D([[-(x1 - r),(y1 - r)],[(x1 - r),(y1 - r)]],false);
   path = path1_1;
-  let path1_2 = new CSG.Path2D([[x1,y1],[x1,-y1]],false);
+  let path1_2 = new CSG.Path2D([[(x1 - r),(y1 - r)],[(x1 - r),-(y1 - r)]],false);
   path = path.concat(path1_2);
-  let path1_3 = new CSG.Path2D([[x1,-y1],[-x1,-y1]],false);
+  let path1_3 = new CSG.Path2D([[(x1 - r),-(y1 - r)],[-(x1 - r),-(y1 - r)]],false);
   path = path.concat(path1_3);
-  let path1_4 = new CSG.Path2D([[-x1,-y1],[-x1,y1]],false);
+  let path1_4 = new CSG.Path2D([[-(x1 - r),-(y1 - r)],[-(x1 - r),(y1 - r)]],false);
   path = path.concat(path1_4);
   path = path.close();
   shape = path.innerToCAG();
+  if ((cornerType == 1) || (cornerType == 2)) {shape = shape.expand(r, cornerRes)}
   feature1 = linear_extrude({height: z1}, shape).translate([0,0,0]);
   var matrix1_2 = new CSG.Matrix4x4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
   feature1 = feature1.transform(matrix1_2);
@@ -135,16 +147,17 @@ function main (params) {
   var z7 = lidThickness;
   feature1.properties.featConnector6A = new CSG.Connector([0, 0, z1 + 0.1], [0, 0, 1], [1, 0, 0]); //Lid closed config
   feature1.properties.featConnector6B = new CSG.Connector([0, -width - 10, lidThickness], [0, 0, -1], [1, 0, 0]); //Lid open config
-  let path7_1 = new CSG.Path2D([[-x1,y1],[-x1,-y1]],false);
+  let path7_1 = new CSG.Path2D([[-(x1 - r),(y1 - r)],[-(x1 - r),-(y1 - r)]],false);
   path = path7_1;
-  let path7_2 = new CSG.Path2D([[-x1,-y1],[x1,-y1]],false);
+  let path7_2 = new CSG.Path2D([[-(x1 - r),-(y1 - r)],[(x1 - r),-(y1 - r)]],false);
   path = path.concat(path7_2);
-  let path7_3 = new CSG.Path2D([[x1,-y1],[x1,y1]],false);
+  let path7_3 = new CSG.Path2D([[(x1 - r),-(y1 - r)],[(x1 - r),(y1 - r)]],false);
   path = path.concat(path7_3);
-  let path7_4 = new CSG.Path2D([[x1,y1],[-x1,y1]],false);
+  let path7_4 = new CSG.Path2D([[(x1 - r),(y1 - r)],[-(x1 - r),(y1 - r)]],false);
   path = path.concat(path7_4);
   path = path.close();
   shape = path.innerToCAG();
+  if ((cornerType == 1) || (cornerType == 2)) {shape = shape.expand(r, cornerRes)}
   feature7 = linear_extrude({height: z7}, shape).translate([0,0,0]);
   feature7.properties.featConnector6  = new CSG.Connector([0, 0, 0], [0, 0, 1], [1, 0, 0]);
 
