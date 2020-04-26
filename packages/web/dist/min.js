@@ -47448,6 +47448,20 @@ var Processor = require('../jscad/processor');
 
 var gProcessor = null;
 
+//Travis's change:
+//Gets query strings in the url (Ex: ...?file=filename.jscad)
+//Source: https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, '\\$&');
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+//End of Travis's changes
+
 function init() {
   var versionText = 'OpenJSCAD.org Version ' + version;
   console.log(versionText);
@@ -47456,7 +47470,10 @@ function init() {
   AlertUserOfUncaughtExceptions();
   
   var viewer = document.getElementById('viewerContext');
-  var design = viewer.getAttribute('design-url');
+  
+  //Travis's change: allow the jscad source file to be specified in the url
+  var design = getParameterByName('file');
+  if (!design) design = viewer.getAttribute('design-url');
   
   gProcessor = new Processor(viewer);
 
