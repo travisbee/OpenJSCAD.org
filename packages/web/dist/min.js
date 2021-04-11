@@ -2545,6 +2545,12 @@ module.exports = {
 
 },{}],28:[function(require,module,exports){
 const {isCAG} = require('../core/utils')
+
+//Allow jscad script to send alerts
+function alertUser(message) {
+	alert(message);
+},
+
 // boolean operations
 
 // FIXME should this be lazy ? in which case, how do we deal with 2D/3D combined
@@ -46858,10 +46864,6 @@ Processor.prototype = {
     this.enableItems();
     this.clearViewer();
   },
-	
-	alertUser: function alertUser(message) {
-		alert(message);
-	},
 
   setCurrentObjects: function setCurrentObjects(objs) {
     this.currentObjects = objs; // list of CAG or CSG objects
