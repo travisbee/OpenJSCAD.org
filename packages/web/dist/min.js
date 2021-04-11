@@ -46858,6 +46858,10 @@ Processor.prototype = {
     this.enableItems();
     this.clearViewer();
   },
+	
+	alertUser: function alertUser(message) {
+		alert(message);
+	},
 
   setCurrentObjects: function setCurrentObjects(objs) {
     this.currentObjects = objs; // list of CAG or CSG objects
