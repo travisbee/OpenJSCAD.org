@@ -2547,10 +2547,12 @@ module.exports = {
 const {isCAG} = require('../core/utils')
 
 //Allow jscad script to send alerts
-function alertUser(message) {
-	alert(message);
-	return message
-},
+function alertUser() {
+	let a = arguments
+	let msg = a[0]
+	alert(a[0])
+	return msg
+}
 
 // boolean operations
 
@@ -2648,7 +2650,7 @@ function intersection () {
 }
 
 module.exports = {
-	alertUser,
+  alertUser,
   union,
   difference,
   intersection
