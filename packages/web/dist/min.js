@@ -2647,6 +2647,7 @@ function intersection () {
 }
 
 module.exports = {
+	alertUser,
   union,
   difference,
   intersection
