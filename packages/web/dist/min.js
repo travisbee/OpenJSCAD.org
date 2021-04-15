@@ -2549,6 +2549,7 @@ const {isCAG} = require('../core/utils')
 //Allow jscad script to send alerts
 function alertUser(message) {
 	alert(message);
+	return message
 },
 
 // boolean operations
